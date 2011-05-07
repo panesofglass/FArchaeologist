@@ -4,7 +4,7 @@
 
     <script src="/scripts/protovis.js" language="javascript"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.min.js" language="javascript"></script>
-    <script language="Javascript" type="text/javascript+protovis">
+    <script language="Javascript">
       function mentionGroup(count)
       {
         return Math.floor(count / 10)+1;
@@ -60,7 +60,7 @@
               node_start_index += 1;
             }
 
-            links = [];
+            var links = [];
             for(var node_index in node_names)
             {
               var sender_name = node_index;
@@ -77,8 +77,8 @@
               }
             }
 
-            var w = document.body.clientWidth,
-            var h = document.body.clientHeight,
+            var w = document.body.clientWidth;
+            var h = document.body.clientHeight;
             var colors = pv.Colors.category19();
 
             var vis = new pv.Panel()
@@ -95,11 +95,13 @@
             force.link.add(pv.Line);
 
             force.node.add(pv.Dot)
-                .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
-                .fillStyle(function(d) d.fix ? "brown" : colors(d.group))
-                .strokeStyle(function() this.fillStyle().darker())
+                .size(function(d){
+                  return (d.linkDegree + 4) * Math.pow(this.scale, -1.5);
+                })
+                .fillStyle(function(d) { return d.fix ? "brown" : colors(d.group); })
+                .strokeStyle(function() { return this.fillStyle().darker(); })
                 .lineWidth(1)
-                .title(function(d) d.nodeName)
+                .title(function(d) { return d.nodeName; })
                 .event("mousedown", pv.Behavior.drag())
                 .event("drag", force);
 
