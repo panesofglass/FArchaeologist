@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
 <html>
   <head>
-    <title>FArchaeologist</title>
+    <title>Conversations | Alt.Net Archaeologist</title>
 
     <script src="/scripts/protovis.js" type="text/javascript"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.min.js" type="text/javascript"></script>
@@ -50,7 +50,7 @@
   </head>
   <body>
     <h2>Who's Talking to Who?</h2>
-    <a href="http://archaeologist.heroku.com/">back to archaeologist</a>
+    <a href="/">back to archaeologist</a>
     <p>
       Darker colors mean more people are mentioning that person.<br />
       Lighter colors means few, if anyone, is tweeting about that person.
