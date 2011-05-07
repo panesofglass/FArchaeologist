@@ -39,19 +39,21 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="frack">
-      <HintPath>..\..\lib\frack\build\frack.dll</HintPath>
+      <HintPath>..\..\lib\frack-bin\frack.dll</HintPath>
     </Reference>
     <Reference Include="Frack.AspNet">
-      <HintPath>..\..\lib\frack\build\Frack.AspNet.dll</HintPath>
+      <HintPath>..\..\lib\frack-bin\Frack.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="Frack.SystemWeb">
-      <HintPath>..\..\lib\frack\build\Frack.SystemWeb.dll</HintPath>
+      <HintPath>..\..\lib\frack-bin\Frack.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core">
+      <HintPath>..\..\lib\FSharp\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB">
-      <HintPath>..\..\lib\MongoDB.dll</HintPath>
+      <HintPath>..\..\lib\mongo-bin\MongoDB.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
