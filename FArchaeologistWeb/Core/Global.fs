@@ -4,12 +4,23 @@ open System
 open System.Collections.Generic
 open System.Linq
 open System.Web
+open System.Web.Mvc
 open System.Web.Routing
 open FArchaeologist
 open Frack
 open Frack.Hosting.AspNet
 open MongoDB
 open Newtonsoft.Json
+
+[<HandleError>]
+type HomeController() =
+  inherit Controller()
+  member x.Index() = x.View() :> ActionResult
+
+type Route = { 
+  controller : string
+  action : string
+  id : UrlParameter }
 
 type Global() =
   inherit System.Web.HttpApplication() 
@@ -28,9 +39,9 @@ type Global() =
 
       return "200 OK", dict [("Content-Type", "text/html")], Str message }
 
-    // Uses the head middleware.
-    // Try using Fiddler and perform a HEAD request.
+    routes.IgnoreRoute("{resource}.axd/{*pathInfo}")
     routes.MapFrackRoute("conversation_edges", app)
+    routes.MapRoute("Default", "", { controller = "Home"; action = "Index"; id = UrlParameter.Optional })
 
   member x.Start() =
     Global.RegisterRoutes(RouteTable.Routes)
