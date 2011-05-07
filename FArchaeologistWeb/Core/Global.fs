@@ -29,14 +29,27 @@ type Global() =
   static member RegisterRoutes(routes:RouteCollection) =
     let connectionString = ConfigurationManager.ConnectionStrings.["mongodb"].ConnectionString
 
+    let discussions = AltNetMiner.getDiscussions connectionString
+    let senderMentions = AltNetMiner.getSenderMentions discussions
+    let nodes = AltNetMiner.getNodes senderMentions
+    let links = AltNetMiner.getLinks senderMentions nodes
+
+    let tweets request = async {
+      let message = discussions |> JsonConvert.SerializeObject
+      return "200 OK", dict [("Content-Type", "text/html")], Str message }
+
     // Create the application
-    let app request = async {
-      let message = AltNetMiner.getDiscussions(connectionString) |> JsonConvert.SerializeObject
+    let conversation_edges request = async {
+      let message = [| ("nodes", box nodes)
+                       ("links", box links) |]
+                    |> dict
+                    |> JsonConvert.SerializeObject
       return "200 OK", dict [("Content-Type", "text/html")], Str message }
 
     // Set up the routes
     routes.IgnoreRoute("{resource}.axd/{*pathInfo}")
-    routes.MapFrackRoute("conversation_edges", app)
+    routes.MapFrackRoute("tweets", tweets)
+    routes.MapFrackRoute("conversation_edges", conversation_edges)
     routes.MapRoute("Default", "{*page}",
                     { controller = "Home"; action = "Index"; id = UrlParameter.Optional })
 
