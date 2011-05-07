@@ -30,7 +30,7 @@ type Global() =
 
     // Uses the head middleware.
     // Try using Fiddler and perform a HEAD request.
-    routes.MapFrackRoute("{*path}", app)
+    routes.MapFrackRoute("conversation_edges", app)
 
   member x.Start() =
     Global.RegisterRoutes(RouteTable.Routes)
