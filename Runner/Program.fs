@@ -1,15 +1,12 @@
 ﻿module Program
 
+open System.Configuration
 open System.Linq
 open FArchaeologist
 open MongoDB
 
-let config = {
-  Host = "flame.mongohq.com"
-  Port = 27018
-  Username = "darkxanthos"
-  Password = "abc123!" }
+let connectionString = ConfigurationManager.ConnectionStrings.["mongodb"].ConnectionString
 
-AltNetMiner.getDiscussions(config).Linq().AsEnumerable()
+AltNetMiner.getDiscussions(connectionString)
   |> Seq.countBy (fun d -> d?sender)
   |> Seq.iter (printfn "%A")

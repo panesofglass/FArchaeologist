@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Generic
+open System.Configuration
 open System.Linq
 open System.Web
 open System.Web.Mvc
@@ -26,22 +27,18 @@ type Global() =
   inherit System.Web.HttpApplication() 
 
   static member RegisterRoutes(routes:RouteCollection) =
-    // Echo the request body contents back to the sender. 
-    // Use Fiddler to post a message and see it return.
-    let app (request: IDictionary<string, obj>) = async {
-      let config = {
-        Host = "flame.mongohq.com"
-        Port = 27018
-        Username = "darkxanthos"
-        Password = "abc123!" }
-      
-      let message = AltNetMiner.getDiscussions(config).Linq().ToArray() |> JsonConvert.SerializeObject
+    let connectionString = ConfigurationManager.ConnectionStrings.["mongodb"].ConnectionString
 
+    // Create the application
+    let app request = async {
+      let message = AltNetMiner.getDiscussions(connectionString) |> JsonConvert.SerializeObject
       return "200 OK", dict [("Content-Type", "text/html")], Str message }
 
+    // Set up the routes
     routes.IgnoreRoute("{resource}.axd/{*pathInfo}")
     routes.MapFrackRoute("conversation_edges", app)
-    routes.MapRoute("Default", "", { controller = "Home"; action = "Index"; id = UrlParameter.Optional })
+    routes.MapRoute("Default", "{*page}",
+                    { controller = "Home"; action = "Index"; id = UrlParameter.Optional })
 
   member x.Start() =
     Global.RegisterRoutes(RouteTable.Routes)

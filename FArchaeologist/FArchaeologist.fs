@@ -2,28 +2,35 @@
 
 [<AutoOpen>]
 module Dynamic =
+  
   let inline (?) this key =
     ( ^a : (member get_Item : ^b -> ^c) (this,key))
-  
+
   let inline (?<-) this key value =
     ( ^a : (member set_Item : ^b * ^c -> ^d) (this,key,value))
 
-type MongoConfig = {
-  Host : string
-  Port : int
-  Username : string
-  Password : string }
-  with member x.ConnectionString = sprintf "mongodb://%s:%s@%s:%d" x.Username x.Password x.Host x.Port
-
 module AltNetMiner =
+  open System.Collections.Generic
+  open System.Linq
   open MongoDB
 
-  let connect (config: MongoConfig) =
-    let mongo = new Mongo(config.ConnectionString)
-    mongo.Connect()
-    mongo
+  let getDiscussions (connectionString:string) =
 
-  let getDiscussions config =
-    let mongo = connect config
-    mongo?AltNetMiner?AltNetSeattleDiscussions
+    use mongo = new Mongo(connectionString)
+    mongo.Connect()
+  
+    // Retrieve the discussions from the Mongo db
+    let discussions = mongo?AltNetMiner?AltNetSeattleDiscussions.Linq().ToArray()
+
+    // Find the tweeps that have a mention in the data set.
+    let mentionedTweeps =
+      discussions
+      |> Array.choose (fun d ->
+          match d?mentions with
+          | :? List<string> -> Some(unbox<List<string>>(d?mentions))
+          | _ -> None)
+      |> Array.collect (Seq.toArray)
+
+    // Filter the results to only those with a mention.
+    discussions |> Array.filter (fun d -> mentionedTweeps.Contains(unbox<string>(d?sender)))
 
