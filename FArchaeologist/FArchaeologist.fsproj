@@ -37,7 +37,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MongoDB">
-      <HintPath>..\lib\MongoDB.dll</HintPath>
+      <HintPath>..\lib\mongo-bin\MongoDB.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
