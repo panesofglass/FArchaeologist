@@ -18,6 +18,11 @@ type HomeController() =
   inherit Controller()
   member x.Index() = x.View() :> ActionResult
 
+[<HandleError>]
+type ConversationsController() =
+  inherit Controller()
+  member x.Index() = x.View() :> ActionResult
+
 type Route = { 
   controller : string
   action : string
@@ -50,8 +55,10 @@ type Global() =
     routes.IgnoreRoute("{resource}.axd/{*pathInfo}")
     routes.MapFrackRoute("tweets", tweets)
     routes.MapFrackRoute("conversation_edges", conversation_edges)
-    routes.MapRoute("Default", "{*page}",
-                    { controller = "Home"; action = "Index"; id = UrlParameter.Optional })
+    routes.MapRoute("Conversations", "conversations",
+                    { controller = "Conversations"; action = "Index"; id =UrlParameter.Optional }) |> ignore
+    routes.MapRoute("Default", "{controller}/{action}/{id}",
+                    { controller = "Home"; action = "Index"; id = UrlParameter.Optional }) |> ignore
 
   member x.Start() =
     Global.RegisterRoutes(RouteTable.Routes)
