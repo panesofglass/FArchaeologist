@@ -38,6 +38,7 @@
                         .strokeStyle(function () { return this.fillStyle().darker(); })
                         .lineWidth(1)
                         .title(function (d) { return d.nodeName; })
+                        .event("mouseover", function (evt) { $("#node_name").text(evt.nodeName); })
                         .event("mousedown", pv.Behavior.drag())
                         .event("drag", force);
 
@@ -46,14 +47,17 @@
                 dataType: 'json'
             });
         });
-    </script>
-  </head>
-  <body>
-    <h2>Who's Talking to Who?</h2>
-    <a href="/">back to archaeologist</a>
-    <p>
-      Darker colors mean more people are mentioning that person.<br />
+    </script> 
+  </head> 
+  <body> 
+    <h2>Who's Talking to Who?</h2> 
+    <a href="/">back to archaeologist</a> 
+    <p> 
+      Darker colors mean more people are mentioning that person.<br /> 
       Lighter colors means few, if anyone, is tweeting about that person.
-    </p>
-  </body>
+    </p> 
+    <p> 
+      Pointing at <span id="node_name" style="font-size:12pt; text-decoration:underline;"></span> 
+    </p> 
+  </body> 
 </html>
