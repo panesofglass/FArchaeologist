@@ -12,6 +12,7 @@ open Frack
 open Frack.Hosting.AspNet
 open MongoDB
 open Newtonsoft.Json
+open Newtonsoft.Json.Converters
 
 [<HandleError>]
 type HomeController() =
@@ -33,15 +34,16 @@ type Global() =
 
   static member RegisterRoutes(routes:RouteCollection) =
     let connectionString = ConfigurationManager.ConnectionStrings.["mongodb"].ConnectionString
+    let dateTimeConverter = [| new IsoDateTimeConverter() :> JsonConverter |]
 
     let discussions = AltNetMiner.getDiscussions connectionString
     let senderMentions = AltNetMiner.getSenderMentions discussions
-    let nodes = AltNetMiner.getNodes senderMentions
+    let nodes = AltNetMiner.getNodes senderMentions 10 
     let links = AltNetMiner.getLinks senderMentions nodes
 
     let tweets request = async {
-      let message = discussions |> JsonConvert.SerializeObject
-      return "200 OK", dict [("Content-Type", "text/html")], Str message }
+      let message = discussions |> (fun d -> JsonConvert.SerializeObject(d, dateTimeConverter))
+      return "200 OK", dict [("Content-Type", "application/json")], Str message }
 
     // Create the application
     let conversation_edges request = async {
@@ -49,7 +51,7 @@ type Global() =
                        ("links", box links) |]
                     |> dict
                     |> JsonConvert.SerializeObject
-      return "200 OK", dict [("Content-Type", "text/html")], Str message }
+      return "200 OK", dict [("Content-Type", "application/json")], Str message }
 
     // Set up the routes
     routes.IgnoreRoute("{resource}.axd/{*pathInfo}")

@@ -10,7 +10,7 @@ let connectionString = ConfigurationManager.ConnectionStrings.["mongodb"].Connec
 
 let discussions = getDiscussions connectionString
 let senderMentions = getSenderMentions discussions
-let nodes = getNodes senderMentions
+let nodes = getNodes senderMentions 10 
 let links = getLinks senderMentions nodes
 
 //discussions |> Seq.iter (printfn "%A")
